@@ -411,7 +411,7 @@ unsigned long long powerN(unsigned char number, unsigned char expoent) {
     for (unsigned long long i = 0; i < expoent; i++) k *= number;
     return k;
 }
-void potenciasDeDois(unsigned n) {
+void doisElevadoA(unsigned n) {
     for (; n >= 1; n--) printf("%llu | ", powerN(2, n));
     printf("%llu", powerN(2, n));
 }
