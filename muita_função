@@ -471,3 +471,10 @@ unsigned buscaSeq(int vetor[], unsigned length, int key) {
  }
  return 0;
 }
+void printBin(unsigned char a) {
+ for (unsigned i = 8; i > 0; i--) {
+  printf("%2u", a >> 7);
+  a <<= 1;
+ }
+ printf("\n");
+}
