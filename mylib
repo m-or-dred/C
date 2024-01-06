@@ -1,0 +1,77 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void contruirVetor(int vetor[], unsigned tamanho) {
+ for (unsigned i = 0; i < tamanho; ++i) scanf("%d", &vetor[i]);
+}
+void mostrarVetor(int vetor[], unsigned tamanho) {
+ for (unsigned i = 0; i < tamanho; i++) printf("%d ", vetor[i]);
+}
+int somaDoVetor(int vetor[], unsigned tamanho) {
+ int acc = 0;
+ for (unsigned i = 0; i < tamanho; i++) acc += vetor[i];
+ return acc;
+}
+float mediaDoVetor(int vetor[], unsigned tamanho) {
+ return somaDoVetor(vetor, tamanho) / (float) tamanho;
+}
+int maiorDoVetor(int vetor[], unsigned tamanho) {
+ int maior = vetor[0];
+ for (unsigned i = 1; i < tamanho; i++) if (vetor[i] > maior) maior = vetor[i];
+ return maior;
+}
+int menorDoVetor(int vetor[], unsigned tamanho) {
+ int menor = vetor[0];
+ for (unsigned i = 1; i < tamanho; i++) if (vetor[i] < menor) menor = vetor[i];
+ return menor;
+}
+long int potencia(int numero, unsigned expoente) {
+ long long resultado = 1;
+ for (long long i = 0; i < expoente; i++) resultado *= numero;
+ return resultado;
+}
+void selectionSort(int vetor[], unsigned tamanho) {
+ for (unsigned i = 0; i < tamanho - 1; i++) {
+  int menor = i;
+  for (unsigned j = i + 1; j < tamanho; j++) {
+   if (vetor[j] < vetor[menor]) menor = j;
+  }
+  int temp = vetor[i];
+  vetor[i] = vetor[menor];
+  vetor[menor] = temp;
+ }
+}
+unsigned buscaBin(int vetor[], unsigned tamanho, int chave) {
+
+ unsigned
+  inicio = 0,
+  final = tamanho - 1,
+  meio;
+
+ while (inicio <= final) {
+  meio = (inicio + final) / 2;
+  if (vetor[meio] < chave)
+   inicio = ++meio;
+  else if (vetor[meio] > chave)
+   final = --meio;
+  else
+   return ++meio;
+ }
+ return 0;
+}
+unsigned buscaSeq(int vetor[], unsigned tamanho, int chave) {
+ for (unsigned i = 0; i < tamanho - 1; ++i) {
+  if (vetor[i] == chave) return i;
+ }
+ return 0;
+}
+unsigned buscaInt(int vetor[], unsigned tamanho, int chave, unsigned skip) {
+ for (unsigned n = 0; n < skip; ++n) {
+  for (unsigned i = n; i < tamanho - 1; i += skip) {
+   if (vetor[i] == chave) return i;
+  }
+ }
+ return 0;
+}
