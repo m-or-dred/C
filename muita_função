@@ -473,8 +473,19 @@ unsigned buscaSeq(int vetor[], unsigned length, int key) {
 }
 void printBin(unsigned char a) {
  for (unsigned i = 8; i > 0; i--) {
-  printf("%2u", a >> 7);
+  printf("%u", a >> 7);
   a <<= 1;
  }
- printf("\n");
+}
+void fib(unsigned n) {
+    if (n > 0) {
+        unsigned a = 1, b = 1, c, i;
+        for (i = 2; i < n; i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        printf("%u", b);
+    }
+    else printf("");
 }
