@@ -4,7 +4,7 @@
 #include <time.h>
 
 void contruirVetor(int vetor[], unsigned tamanho) {
- for (unsigned i = 0; i < tamanho; ++i) scanf("%d", &vetor[i]);
+ for (unsigned i = 0; i < tamanho; i++) scanf("%d", &vetor[i]);
 }
 void mostrarVetor(int vetor[], unsigned tamanho) {
  for (unsigned i = 0; i < tamanho; i++) printf("%d ", vetor[i]);
@@ -52,24 +52,21 @@ unsigned buscaBin(int vetor[], unsigned tamanho, int chave) {
 
  while (inicio <= final) {
   meio = (inicio + final) / 2;
-  if (vetor[meio] < chave)
-   inicio = ++meio;
-  else if (vetor[meio] > chave)
-   final = --meio;
-  else
-   return ++meio;
+  if (vetor[meio] < chave) inicio = ++meio;
+  else if (vetor[meio] > chave) final = --meio;
+  else return ++meio;
  }
  return 0;
 }
 unsigned buscaSeq(int vetor[], unsigned tamanho, int chave) {
- for (unsigned i = 0; i < tamanho - 1; ++i) {
+ for (unsigned i = 0; i < tamanho; i++) {
   if (vetor[i] == chave) return i;
  }
  return 0;
 }
 unsigned buscaInt(int vetor[], unsigned tamanho, int chave, unsigned skip) {
- for (unsigned n = 0; n < skip; ++n) {
-  for (unsigned i = n; i < tamanho - 1; i += skip) {
+ for (unsigned n = 0; n < skip; n++) {
+  for (unsigned i = n; i < tamanho; i += skip) {
    if (vetor[i] == chave) return i;
   }
  }
