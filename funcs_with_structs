@@ -1,0 +1,294 @@
+
+#ifndef TESTES_STRUCT_H
+#define TESTES_STRUCT_H
+#endif
+
+#include "libs.h"
+
+typedef struct tree_t {
+ C * species, id;
+ F high;
+} tree_t;
+F frac_of_taller_trees(tree_t *arr, U len, F high) {
+ U i, count = 0;
+ for (i = 0; i < len; ++i)
+  if (arr[i].high > high)
+   count++;
+ return count;
+}
+U qty_of_a_species(C *species, tree_t *arr, U len) {
+ U i, count = 0;
+ for (i = 0; i < len; ++i)
+  if (!strcmp(species, arr[i].species))
+   ++count;
+ return count;
+}
+U species_bin_search(C *species, tree_t *arr, U len) {
+ U a = 0, b = len-1 , c;
+ while (a <= b){
+  c = (a + b) / 2;
+  if (strcmp(species, arr[c].species) > 0)
+   a = ++c;
+  else if (strcmp(species, arr[c].species) < 0)
+   b = --c;
+  else
+   return ++c;
+ }
+ return 0;
+}
+V show_trees(tree_t *arr, U len) {
+ for (U i = 0; i < len; ++i)
+  printf("%s\n", arr[i].species);
+}
+V sort_by_species(tree_t *arr, U len) {
+ U i, j, min;
+ tree_t temp;
+ for (i = 0; i < len-1; ++i){
+  min = i;
+  for (j = i+1; j < len; ++j)
+   if (strcmp(arr[j].species, arr[min].species) < 0)
+    min = j;
+  temp = arr[i],
+  arr[i] = arr[min],
+  arr[min] = temp;
+ }
+}
+
+typedef struct pc_t {
+ F price, clock;
+} pc_t ;
+I max_clock_min_price(pc_t *arr, unsigned len, float price) {
+
+ U i, pos;
+ F max_clock = 0.0;
+
+ for (i = 0; i < len; ++i)
+  if (arr[i].price <= price && arr[i].clock > max_clock)
+   max_clock = arr[i].clock,
+   pos = i;
+
+ if (max_clock)
+  return pos;
+
+ return -1;
+}
+
+typedef struct list_t {
+ I arr[100], qty;
+} ll_t;
+V del_(ll_t *l, I key) {
+
+ U i = 0;
+
+ while ((* l).arr[i] != key && i < (* l).qty)
+  ++i;
+
+ for (; i < (* l).qty-1; ++i)
+  (* l).arr[i] = (* l).arr[i+1];
+
+ --(* l).qty;
+}
+
+typedef struct bday_t {
+ UC month, day;
+ C name[10];
+} bday_t;
+typedef struct bday_list {
+ bday_t * arr;
+ U qty, cap;
+} bday_list_t;
+V alloc_mem(bday_list_t *l) {
+ (*l).arr = (bday_t *) malloc(sizeof(bday_t)),
+ (*l).qty = 0,
+ (*l).cap = 1;
+}
+void realloc_mem(bday_list_t *l) {
+ (*l).cap *= 2,
+ (*l).arr = (bday_t*)  realloc(   (*l).arr ,  (*l).cap  *  sizeof(bday_t)   );
+}
+V fill_list(bday_list_t *l) {
+ bday_t bday;
+ scanf("%s%*c %hhu %hhu", bday.name, &bday.month, &bday.day);
+ while (bday.month){
+  if ((* l).qty == (* l).cap)
+   realloc_mem(l);
+  (* l).arr[(* l).qty] = bday;
+  (* l).qty++;
+  scanf("%s%*c %hhu %hhu", bday.name, &bday.month, &bday.day);
+ }
+}
+V sort_bdayers(bday_list_t *l ){
+ I j;
+ bday_t temp;
+ for (U i = 1; i < (* l).qty; ++i){
+  j = i;
+
+  while ((* l).arr[j].month >= (* l).arr[j+1].month && 0 <= j){
+   temp = (* l).arr[j];
+   (* l).arr[j] = (* l).arr[j+1];
+   (* l).arr[j + 1] = temp;
+
+   if ((* l).arr[j].month == (* l).arr[j+1].month && (* l).arr[j].day > (* l).arr[j+1].day)
+    temp = (* l).arr[j],
+    (* l).arr[j] = (* l).arr[j+1],
+    (* l).arr[j+1] = temp;
+
+   --j;
+
+  }
+ }
+}
+V show_bdayers(bday_list_t *l) {
+
+ C meses[][10] = {"Janeiro", "Fevereiro", "Marco",
+                     "Abril", "Maio", "Junho",
+                     "Julho", "Agosto", "Setembro",
+                     "Outubro", "Novembro", "Dezembro"};
+ F data;
+ I mes, dia;
+
+ for (U i = 0; i < (* l).qty; ++i) {
+  data = (* l).arr[i].month;
+  mes = (I) data;
+  dia = (data - mes) * 100;
+  printf("%s - %d de %s", (* l).arr[i].name, dia, meses[mes - 1]);
+//  printf("%s - %.f", (*l).itens[i].name, (*l).itens[i].date);
+ }
+ printf("\n");
+}
+V show_bdayers_2(bday_list_t *l) {
+ for (I i = 0; i < (*l).qty; i++) {
+  if ((*l).arr[i].day < 10 && (*l).arr[i].month < 10)
+   printf("%2d. %s - 0%hhu/0%hhu\n", i + 1, (*l).arr[i].name, (*l).arr[i].day, (*l).arr[i].month);
+  else if ((*l).arr[i].day < 10)
+   printf("%2d. %s - 0%hhu/%hhu\n", i + 1, (*l).arr[i].name, (*l).arr[i].day, (*l).arr[i].month);
+  else if ((*l).arr[i].month < 10)
+   printf("%2d. %s - %hhu/0%hhu\n", i + 1, (*l).arr[i].name, (*l).arr[i].day, (*l).arr[i].month);
+  else
+   printf("%2d. %s - %hhu/%hhu\n", i + 1, (*l).arr[i].name, (*l).arr[i].day, (*l).arr[i].month);
+ }
+ printf("\n");
+}
+/*
+
+Louro
+6
+9
+Fernando
+7
+16
+Eduardo
+2
+12
+Aline
+1
+8
+Carol
+6
+4
+Luiza
+3
+10
+Sofia
+10
+11
+Jaide
+5
+30
+Dias
+4
+8
+Nicolas
+6
+20
+Andre
+11
+11
+Rian
+6
+22
+#
+0
+0
+
+*/
+V func_bday() {
+ bday_list_t l;
+ alloc_mem(&l);
+ fill_list(&l);
+ show_bdayers_2(&l);
+ sort_bdayers(&l);
+ show_bdayers_2(&l);
+}
+
+typedef struct {
+ unsigned lin, col;
+ I **matrix;
+} t_matrix;
+
+typedef struct tipoArcore {
+ char *familia, *especie;
+} tipoArvore;
+
+V sort_trees(tipoArvore *l, unsigned len) {
+ I j;
+ tipoArvore temp;
+ for (unsigned i = 0; i < len - 1; i++) {
+  j = i;
+
+  while (l[j].familia >= l[j + 1].familia && 0 <= j) {
+   temp = l[j],
+   l[j] = l[j + 1],
+   l[j + 1] = temp;
+
+   if (l[j].familia == l[j + 1].familia && l[j].especie > l[j + 1].especie)
+    temp = l[j],
+    l[j] = l[j + 1],
+    l[j + 1] = temp;
+
+   j--;
+
+  }
+ }
+}
+
+
+typedef struct person_t {
+ char *nome;
+ char *veg;
+ float altura;
+} person_t;
+float avg_veg_high(person_t *arr, unsigned len) {
+ float acc = 0, count = 0;
+ for (unsigned i = 0; i < len; ++i)
+  if (arr[i].veg == "S")
+   acc += arr[i].altura,
+    ++count;
+ return acc / count;
+}
+
+typedef struct mat_t {
+ unsigned lin, col;
+ I **mat;
+} mat_t;
+V func(I **mat, I *arr) {
+ unsigned i, j, lin;
+ I prod, max = 0;
+ for (i = 0; i < X; ++i) {
+  prod = 1;
+  for (j = 0; j < X; ++j) {
+   if (!mat[i][j])
+    break;
+   prod *= mat[i][j];
+  }
+  if (!prod)
+   continue;
+  if (prod > max)
+   max = prod,
+    lin = i;
+ }
+ for (i = 0; i < X; ++i)
+  arr[i] = mat[lin][i];
+}
+
+//struct.h
