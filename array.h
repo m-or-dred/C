@@ -1,4 +1,3 @@
-
 #ifndef TESTES_ARRAY_H
 #define TESTES_ARRAY_H
 #endif
@@ -111,14 +110,13 @@ void merge_sort_1(int *arr, unsigned len) {
  merge_sort_0(arr, aux, 0, len-1);
  free(aux);
 }
+
 void quick_sort(int *arr, unsigned stt, unsigned end) {
  int i = stt, j = end, temp;
  if (i <= j) {
   unsigned mid = (j+i)/2;
-  while (arr[i] < arr[mid])
-   ++i;
-  while (arr[j] > arr[mid])
-   --j;
+  while (arr[i] < arr[mid]) ++i;
+  while (arr[j] > arr[mid]) --j;
   if (i <= j)
    temp = arr[i],
    arr[i] = arr[j],
@@ -128,6 +126,7 @@ void quick_sort(int *arr, unsigned stt, unsigned end) {
  if (stt < j) quick_sort(arr, stt, j);
  if (i < end) quick_sort(arr, i, end);
 }
+
 void selection_sort(int *arr, unsigned len) {
  int temp;
  unsigned i, j, min;
@@ -141,6 +140,7 @@ void selection_sort(int *arr, unsigned len) {
   arr[min] = temp;
  }
 }
+
 void show_arr(int *arr, unsigned len) {
  for (unsigned i = 0; i < len; i++)
   printf("%d\n", arr[i]);
