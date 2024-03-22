@@ -106,19 +106,19 @@ void msort(int *arr, int len) {
 }
 
 void quick_sort(int *arr, unsigned stt, unsigned end) {
-	int i = stt, j = end, temp;
- 	if (i <= j) {
-		unsigned mid = (j+i)/2;
-		while (arr[i] < arr[mid]) ++i;
-		while (arr[j] > arr[mid]) --j;
-		if (i <= j)
-			temp = arr[i],
-			arr[i] = arr[j],
-			arr[j] = temp,
-			++i, --j;
-	}
-	if (stt < j) quick_sort(arr, stt, j);
-	if (i < end) quick_sort(arr, i, end);
+    int i = stt, j = end, temp;
+    if (i < j) {
+        int mid = (i + j) / 2 + 1;
+        while (arr[i] < arr[mid]) ++i;
+        while (arr[j] > arr[mid]) --j;
+        if (i <= j)
+            temp = arr[i],
+            arr[i] = arr[j],
+            arr[j] = temp,
+            ++i, --j;
+    }
+    if (stt < j) quick_sort(arr, stt, j);
+    if (i < end) quick_sort(arr, i, end);
 }
 
 void selection_sort(int *arr, unsigned len) {
