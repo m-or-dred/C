@@ -1,0 +1,47 @@
+
+typedef struct t__pessoa {
+    char nome[10];
+} t__pessoa;
+
+typedef struct t__no {
+    t__pessoa pessoa;
+    struct t__no *prox;
+} t__no;
+
+typedef struct t__fila {
+    t__no *primeiro, *ultimo;
+} t__fila;
+
+#include <string.h>
+int fn1(t__fila *fila, char *chave) {
+    t__no *aux = fila -> primeiro; int pos = 1;
+    while (aux && strcmp(aux -> pessoa.nome, chave))
+        aux = aux -> prox, pos++;
+    return pos * (aux != NULL);
+}
+
+#include <stdlib.h>
+void insere_na_fila(t__fila *fila, t__pessoa p) {
+    t__no *novo_ult = malloc(sizeof(t__no));
+    novo_ult -> pessoa = p;
+    novo_ult -> prox = NULL;
+    if (fila -> ultimo)
+        fila -> ultimo -> prox = novo_ult,
+        fila -> ultimo = novo_ult;
+    else
+        fila -> primeiro = novo_ult,
+        fila -> ultimo = novo_ult;
+}
+
+#include <stdio.h>
+int main() {
+    t__fila fila; t__pessoa p; int i,n;
+    fila.primeiro = NULL; fila.ultimo = NULL;
+    printf("numero de pessoas\n"); scanf("%d%*c", &n);
+    printf("\ninsira os nomes\n");
+    for (i = 0; i < n; i++)
+        scanf("%[^\n]%*c", p.nome),
+        insere_na_fila(&fila, p);
+    printf("\nnome procurado\n"); scanf("%[^\n]%*c", p.nome);
+    printf("\nresultado: %d", fn1(&fila, p.nome));
+}
