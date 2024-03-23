@@ -18,10 +18,10 @@ void criar_fila(t_fila *fila) {
 }
 
 int tamanho(t_fila *fila) {
- t_no *aux = fila -> prim; int t = 0;
- while (aux)
-     t++, aux = aux -> prox;
- return t;
+    t_no *aux = fila -> prim; int t = 0;
+    while (aux)
+        t++, aux = aux -> prox;
+    return t;
 }
 
 void enfileirar(t_fila *fila, int numrero) {
@@ -31,7 +31,7 @@ void enfileirar(t_fila *fila, int numrero) {
     if (fila -> prim)
         fila -> ultimo -> prox = novo_ultimo,
         fila -> ultimo = novo_ultimo;
-     else
+    else
         fila -> prim = novo_ultimo,
         fila -> ultimo = novo_ultimo;
 }
@@ -47,37 +47,37 @@ void furar_fila(t_fila *fila, t_dado numero, int posicao) {
             int prox_pos = 2;
             while (prox_pos < posicao && prox)
                 prox_pos++,
-                temp = prox,
-                prox = temp -> prox;
+                    temp = prox,
+                    prox = temp -> prox;
             fdp -> prox = prox;
             temp -> prox = fdp;
         }
         else
             fdp -> prox = temp,
-            fila -> prim = fdp;
+                fila -> prim = fdp;
     }
     else
         printf("(posicao invalida)\n");
 }
 
 void desenfileirar(t_fila *fila, t_dado *resultado) {
- t_no *atual = fila -> prim;
- if (atual)
-  *resultado = atual -> numero,
-  fila -> prim = atual -> prox,
-  free(atual);
+    t_no *atual = fila -> prim;
+    if (atual)
+        *resultado = atual -> numero,
+        fila -> prim = atual -> prox,
+        free(atual);
 }
 
 void mostrar_fila(t_fila *fila) {
- t_no *atual = fila -> prim;
- printf("[");
- if (atual) {
-  while (atual)
-   printf("%d,", atual -> numero),
-   atual = atual -> prox;
-  printf("\b");
- }
- printf("]\n");
+    t_no *atual = fila -> prim;
+    printf("[");
+    if (atual) {
+        while (atual)
+            printf("%d,", atual -> numero),
+                atual = atual -> prox;
+        printf("\b");
+    }
+    printf("]\n");
 }
 
 void intercalar_filas(t_fila *fila_1, t_fila *fila_2) {
@@ -113,7 +113,7 @@ void separar_fila(t_fila *fila_1, t_fila *fila_2) {
         b = a -> prox;
         while (a && b) {
             enfileirar(fila_2, b -> numero),
-            a -> prox = b -> prox;
+            a -> prox = b -> prox,
             a = b -> prox;
             if (a)
                 b = a -> prox;
@@ -126,7 +126,7 @@ char func(t_fila *fila, int chave) {
     t_no *x = fila -> prim;
     while (x)
         acc += x -> numero,
-        x = x -> prox;
+            x = x -> prox;
     return acc > chave;
 }
 
@@ -144,7 +144,7 @@ int ha_intersecao(t_fila *f_1, t_fila *f_2) {
     return 0;
 }
 
-/*int main() {
+int main() {
 //    mostrar_fila(&fila);
 //    enfileirar(&fila, 1);
 //    mostrar_fila(&fila);
@@ -176,15 +176,15 @@ int ha_intersecao(t_fila *f_1, t_fila *f_2) {
 //    mostrar_fila(&fila);
 //    desenfileirar(&fila, &dado);
 //    mostrar_fila(&fila);
-*//*
+
     t_fila fila_1, fila_2; t_dado dado;
     criar_fila(&fila_1);
     criar_fila(&fila_2);
     enfileirar(&fila_1, 1),
-    enfileirar(&fila_1, 2),
     enfileirar(&fila_1, 3),
-    enfileirar(&fila_2, 4),
+    enfileirar(&fila_1, 5),
     enfileirar(&fila_2, 2),
+    enfileirar(&fila_2, 4),
     enfileirar(&fila_2, 6),
     printf("fila 1: "); mostrar_fila(&fila_1);
     printf("fila 2: "); mostrar_fila(&fila_2);
@@ -194,12 +194,12 @@ int ha_intersecao(t_fila *f_1, t_fila *f_2) {
     separar_fila(&fila_1, &fila_2);
     printf("\nfila 1: "); mostrar_fila(&fila_1);
     printf("fila 2: "); mostrar_fila(&fila_2);
-*//*
+
 //    printf("\n%hhd", func(&fila_1, 7));
 //    printf("\n%hhd", func(&fila_2, 7));
+
 //    int num = ha_intersecao(&fila_1, &fila_2);
 //    if (num)
 //        printf("tem intersecao: %d\n", num);
 
-}*/
-
+}
