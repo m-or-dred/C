@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct t_produto {
+ char descricao[24];
+ float peso, preco;
+} t_produto;
+
+typedef struct t_no {
+ t_produto produto;
+ struct t_no *prox;
+} t_no;
+
+typedef struct {
+ t_no *primeiro, *ultimo;
+} t_lista;
+
+void criar_lista(t_lista *lista) {
+ lista -> primeiro = NULL;
+ lista -> ultimo = NULL;
+}
+
+void cadastrar_produto(t_lista *lista) {
+ t_produto p;
+ scanf("%[^\n]%*c", p.descricao);
+ scanf("%f%*c", &p.peso);
+ scanf("%f%*c", &p.preco);
+ t_no *n = (t_no *) malloc(sizeof(t_no));
+ n -> produto = p;
+ n -> prox = lista -> primeiro;
+ lista -> primeiro = n;
+ if (! lista -> ultimo)
+  lista -> ultimo = n;
+}
+
+void mostrar_lista(t_lista *lista) {
+ t_no *atual = lista -> primeiro;
+ while (atual)
+  printf("produto: %s | ", atual -> produto.descricao),
+  printf("peso: %.2f kg | ", atual -> produto.peso),
+  printf("preco: R$%.2f\n", atual -> produto.preco),
+  atual = atual -> prox;
+}
+
+int remover_produto(char *descricao, t_lista *lista) {
+ if (lista -> primeiro) {
+  if (strcmp(descricao, lista -> primeiro -> produto.descricao)) {
+   t_no *atual = lista -> primeiro;
+   while (atual -> prox && strcmp(descricao, atual -> prox -> produto.descricao))
+    atual = atual -> prox;
+   if (atual -> prox && !strcmp(descricao, atual -> prox -> produto.descricao)) {
+    t_no *tmp = atual -> prox;
+    atual -> prox = tmp -> prox;
+    free(tmp);
+    return 1;
+   }
+  }
+  else {
+   t_no *tmp = lista -> primeiro;
+   lista -> primeiro = tmp -> prox;
+   free(tmp);
+   return 1;
+  }
+ }
+ return 0;
+}
+
+void pesquisar_produto(char *descricao, t_lista *lista) {
+ t_no *atual = lista -> primeiro;
+ while (atual && strcmp(descricao, atual -> produto.descricao))
+  atual = atual -> prox;
+ if (atual && !strcmp(descricao, atual -> produto.descricao))
+  printf("descricao: %s\n", atual -> produto.descricao),
+  printf("peso: %.2f kg\n", atual -> produto.peso),
+  printf("preco: R$%.2f\n", atual -> produto.preco);
+ else
+  printf("(nao encontrado: %s)\n", descricao);
+}
+
+/*
+int main() {
+tipoLista l;
+criar_lista(&l);
+cadastrar_produto(&l);
+cadastrar_produto(&l);
+remover_produto("cama box", &l);
+mostrar_lista(&l);
+pesquisar_produto("lava e seca", &l);
+pesquisar_produto("roupeiro", &l);
+}
+*/
