@@ -1,0 +1,180 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <sys/stat.h>
+
+typedef struct tipoPessoa {
+    char nome[30], endereco[20];
+    float altura;
+} tipoPessoa;
+
+typedef struct tipoNo {
+    tipoPessoa pessoa;
+    struct tipoNo *prox;
+} tipoNo;
+
+typedef struct tipoLista {
+    tipoNo *prim, *ult;
+} tipoLista;
+
+void salva_no_arquivo(tipoPessoa *vet, int tam) {
+    FILE *fp = fopen("saida.out", "w");
+    for (int i = 0; i < tam; i++)
+        fprintf(fp, "%s\n%s\n%.2f\n\n", vet[i].nome, vet[i].endereco, vet[i].altura);
+    fclose(fp);
+}
+
+void conta_A(FILE *fp){
+    int cont = 0;
+    char temp;
+    while (fscanf(fp, "%c", &temp) != EOF)
+        cont += temp == 'A';
+    printf("%d", cont);
+}
+
+void copiaArquivo(FILE *fp1) {
+    FILE *fp2 = fopen("copia", "w");
+    int temp;
+    while (fscanf(fp1, "%d%*c", &temp) != EOF)
+        fprintf(fp2, "%d\n", temp);
+    fclose(fp2);
+}
+
+//void append(tipoLista *l, tipoPessoa p) {
+//    tipoNo *novo_ult = malloc(sizeof(tipoNo));
+//    novo_ult -> pessoa = p;
+//    novo_ult -> prox = NULL;
+//    if (l -> prim)
+//        l -> ult -> prox = novo_ult,
+//        l -> ult = novo_ult;
+//    else
+//        l -> prim = novo_ult,
+//        l -> ult = novo_ult;
+//}
+
+//void intercala_pra_lista(tipoLista *l, FILE *fp1, FILE *fp2) {
+//    fseek(fp1, 0, SEEK_SET); fseek(fp2, 0, SEEK_SET);
+//    tipoPessoa buffer1, buffer2;
+//    while (fread(&buffer1, sizeof(tipoPessoa), 1, fp1) &&
+//           fread(&buffer2, sizeof(tipoPessoa), 1, fp2)) {
+//        if (buffer1.altura < buffer2.altura)
+//            append(l, buffer1),
+//            fseek(fp2, -sizeof(tipoPessoa), SEEK_CUR);
+//        else
+//            append(l, buffer2),
+//            fseek(fp1, -sizeof(tipoPessoa), SEEK_CUR);
+//    }
+//    while (fread(&buffer1, sizeof(tipoPessoa), 1, fp1))
+//        append(l, buffer1);
+//    while (fread(&buffer2, sizeof(tipoPessoa), 1, fp2))
+//        append(l, buffer2);
+//}
+
+tipoPessoa *busca_no_arquivo(FILE *arq, char *chave) {
+    tipoPessoa *buffer = malloc(sizeof(tipoPessoa));
+    while (fread(buffer, sizeof(tipoPessoa), 1, arq))
+        if (!strcmp(buffer->nome, chave))
+            return buffer;
+    return NULL;
+}
+/*
+void quick_sort(tipoPessoa *arr, int inicio, int fim) {
+    int i = inicio, j = fim; tipoPessoa t;
+    if (i <= j) {
+        int m = (j+i)/2;
+        while (strcmp(arr[i].nome, arr[m].nome) < 0) ++i;
+        while (strcmp(arr[j].nome, arr[m].nome) > 0) --j;
+        if (i <= j)
+            t = arr[i],
+            arr[i] = arr[j],
+            arr[j] = t,
+            ++i, --j;
+    }
+    if (i < fim) quick_sort(arr, i, fim);
+    if (inicio < j) quick_sort(arr, inicio, j);
+}
+*/
+int tamanho_arquivo(FILE *fp) {
+    int tmp = ftell(fp);
+    fseek(fp, 0, SEEK_END);
+    int tamanho = ftell(fp)-1;
+    fseek(fp, tmp, SEEK_SET);
+    return tamanho;
+}
+
+int tam_arq(FILE *fp) {
+    struct stat buf;
+    fstat(fileno(fp), &buf);
+    return buf.st_size;
+}
+
+/*
+void ordena_arq(FILE *fp) {
+    int tam = tam_arq(fp) / sizeof(tipoPessoa);
+    tipoPessoa temp, *vet = (tipoPessoa *) malloc(tam);
+    fread(vet, tam, 1, fp);
+    quick_sort(vet, 0, tam - 1);
+    fwrite(vet, tam, 1, fp);
+    free(vet);
+}
+*/
+
+int busca_bin(FILE *fp, char *chave, tipoPessoa *buf) {
+    int a = 0, b = tam_arq(fp) / sizeof(tipoPessoa) - 1, m;
+    while (a <= b) {
+        m = (a + b) / 2;
+        fseek(fp, m * sizeof(tipoPessoa), SEEK_SET);
+        fread(buf, sizeof(tipoPessoa), 1, fp);
+        if (strcmp(chave, buf -> nome) < 0)
+            b = m - 1;
+        else if (strcmp(chave, buf -> nome) > 0)
+            a = m + 1;
+        else
+            return 1;
+    }
+    return 0;
+}
+
+tipoPessoa *busca_seq_arq(FILE *fp, char *chave) {
+    tipoPessoa *buf = malloc(sizeof(tipoPessoa));
+    while (fread(buf, sizeof(tipoPessoa), 1, fp))
+        if (!strcmp(buf -> nome, chave))
+            return buf;
+    return NULL;
+}
+
+float similaridade(char *sa, char *sb) {
+    if (!sa || !sb) return 0;
+    int i = 0; float dist = 0;
+    while (sa[i] && sb[i])
+        dist += sa[i] == sb[i];
+    while (sa[i] || sb[i]) i++;
+    return dist / i;
+}
+
+int num_de_comparacoese(int *arr, int tam) {
+    int i, j, k, comp = 0;
+    for (i = 1; i < tam; i++, comp++) {
+        k = arr[i], j = i - 1;
+        while (j >= 0 && arr[j] > k)
+            comp += 2,
+            arr[j + 1] = arr[j],
+            j--;
+        arr[j + 1] = k;
+    }
+    return comp;
+}
+
+int ta_ordenada(tipoLista *l) {
+    tipoNo *aux = l -> prim;
+    if (aux) {
+        tipoNo *seg = aux -> prox;
+        while (seg) {
+            if (seg -> pessoa.nome < aux -> pessoa.nome)
+                return 0;
+            aux = seg,
+            seg = aux -> prox;
+        }
+    }
+    return 1;
+}
